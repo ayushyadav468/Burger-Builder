@@ -2,21 +2,82 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+
+const INGREDIENTS_PRICE = {
+  salad: 20,
+  cheese: 40,
+  meat: 100,
+  bacon: 120,
+};
 
 class BurgerBuilder extends Component {
   state = {
     ingredients: {
-      salad: 1,
-      cheese: 2,
+      salad: 0,
+      cheese: 0,
       meat: 0,
       bacon: 0,
     },
+    totalPrice: 50,
+    isPurchasable: false,
   };
+
+  purchasableHandler = (ingredients) => {
+    const sum = Object.keys(ingredients)
+      .map((igKey) => {
+        return ingredients[igKey];
+      })
+      .reduce((sum, el) => {
+        return sum + el;
+      }, 0);
+    this.setState({ isPurchasable: sum > 0 });
+  };
+
+  addIngredientHandler = (type) => {
+    const newIngredient = this.state.ingredients[type] + 1;
+    const updatedIngredients = {
+      ...this.state.ingredients,
+    };
+    updatedIngredients[type] = newIngredient;
+    const newPrice = this.state.totalPrice + INGREDIENTS_PRICE[type];
+    this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
+    this.purchasableHandler(updatedIngredients);
+  };
+
+  removeIngredientHandler = (type) => {
+    const oldIngredient = this.state.ingredients[type];
+    if (oldIngredient <= 0) {
+      return;
+    }
+    const newIngredient = oldIngredient - 1;
+    const updatedIngredients = {
+      ...this.state.ingredients,
+    };
+    updatedIngredients[type] = newIngredient;
+    const newPrice = this.state.totalPrice - INGREDIENTS_PRICE[type];
+    this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
+    this.purchasableHandler(updatedIngredients);
+  };
+
   render() {
+    const disabledInfo = {
+      ...this.state.ingredients,
+    };
+    for (let key in disabledInfo) {
+      disabledInfo[key] = disabledInfo[key] <= 0;
+    }
     return (
       <Aux>
+        <Modal />
         <Burger ingredients={this.state.ingredients} />
-        <BuildControls />
+        <BuildControls
+          addIngredient={this.addIngredientHandler}
+          removeIngredient={this.removeIngredientHandler}
+          disabled={disabledInfo}
+          price={this.state.totalPrice}
+          purchasable={this.state.isPurchasable}
+        />
       </Aux>
     );
   }

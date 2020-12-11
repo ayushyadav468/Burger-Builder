@@ -14,7 +14,9 @@ scripts/
 /build
 
 # misc
+.vscode
 .prettierrc
+.eslintrc.js
 .eslintcache
 .DS_Store
 .env.local
