@@ -6,6 +6,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axiosInstance from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENTS_PRICE = {
   salad: 20,
@@ -89,16 +90,16 @@ class BurgerBuilder extends Component {
         deliveryMode: 'fastest',
       },
     };
-    // axiosInstance
-    //   .post('/orders.json', order)
-    //   .then((response) => {
-    //     // console.log(response);
-    //     this.setState({ loading: false, purchasing: false });
-    //   })
-    //   .catch((err) => {
-    //     this.setState({ loading: false, purchasing: false });
-    //     console.log(err);
-    //   });
+    axiosInstance
+      .post('/orders.json', order)
+      .then((response) => {
+        // console.log(response);
+        this.setState({ loading: false, purchasing: false });
+      })
+      .catch((err) => {
+        this.setState({ loading: false, purchasing: false });
+        console.log(err);
+      });
   };
 
   purchaseCancelHandler = () => {
@@ -149,4 +150,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axiosInstance);
