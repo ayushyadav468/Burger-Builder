@@ -22,6 +22,7 @@ class BurgerBuilder extends Component {
     isPurchasable: false,
     purchasing: false,
     loading: false,
+    error: false,
   };
   componentDidMount() {
     axiosInstance
@@ -30,6 +31,9 @@ class BurgerBuilder extends Component {
       )
       .then((response) => {
         this.setState({ ingredients: response.data });
+      })
+      .catch((error) => {
+        this.setState({ error: true });
       });
   }
   purchasableHandler = (ingredients) => {
@@ -118,7 +122,13 @@ class BurgerBuilder extends Component {
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
-    let burger = <Spinner />;
+    let burger = this.state.error ? (
+      <p style={{ textAlign: 'center' }}>
+        Can not reach firebase to load ingredients. Check Internet
+      </p>
+    ) : (
+      <Spinner />
+    );
     let orderSummary = null;
 
     if (this.state.ingredients) {
