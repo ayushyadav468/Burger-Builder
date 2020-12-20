@@ -17,18 +17,21 @@ const INGREDIENTS_PRICE = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0,
-    },
+    ingredients: null,
     totalPrice: 50,
     isPurchasable: false,
     purchasing: false,
     loading: false,
   };
-
+  componentDidMount() {
+    axiosInstance
+      .get(
+        'https://burger-builder-61128-default-rtdb.firebaseio.com/ingredients.json'
+      )
+      .then((response) => {
+        this.setState({ ingredients: response.data });
+      });
+  }
   purchasableHandler = (ingredients) => {
     const sum = Object.keys(ingredients)
       .map((igKey) => {
@@ -115,15 +118,33 @@ class BurgerBuilder extends Component {
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
+    let burger = <Spinner />;
+    let orderSummary = null;
 
-    let orderSummary = (
-      <OrderSummary
-        ingredients={this.state.ingredients}
-        price={this.state.totalPrice}
-        purchaseContinue={this.purchaseContinueHandler}
-        purchaseCancel={this.purchaseCancelHandler}
-      />
-    );
+    if (this.state.ingredients) {
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients} />
+          <BuildControls
+            disabled={disabledInfo}
+            price={this.state.totalPrice}
+            purchasable={this.state.isPurchasable}
+            addIngredient={this.addIngredientHandler}
+            removeIngredient={this.removeIngredientHandler}
+            ordered={this.purchaseHandler}
+          />
+        </Aux>
+      );
+      orderSummary = (
+        <OrderSummary
+          ingredients={this.state.ingredients}
+          price={this.state.totalPrice}
+          purchaseContinue={this.purchaseContinueHandler}
+          purchaseCancel={this.purchaseCancelHandler}
+        />
+      );
+    }
+
     if (this.state.loading) {
       orderSummary = <Spinner />;
     }
@@ -136,15 +157,7 @@ class BurgerBuilder extends Component {
         >
           {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.isPurchasable}
-          addIngredient={this.addIngredientHandler}
-          removeIngredient={this.removeIngredientHandler}
-          ordered={this.purchaseHandler}
-        />
+        {burger}
       </Aux>
     );
   }
