@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Aux/Aux';
+import styles from './BurgerBuilder.module.css';
+import div from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -133,7 +134,7 @@ class BurgerBuilder extends Component {
 
     if (this.state.ingredients) {
       burger = (
-        <Aux>
+        <div className={styles.BurgerBuilder}>
           <Burger ingredients={this.state.ingredients} />
           <BuildControls
             disabled={disabledInfo}
@@ -143,7 +144,7 @@ class BurgerBuilder extends Component {
             removeIngredient={this.removeIngredientHandler}
             ordered={this.purchaseHandler}
           />
-        </Aux>
+        </div>
       );
       orderSummary = (
         <OrderSummary
@@ -160,7 +161,7 @@ class BurgerBuilder extends Component {
     }
 
     return (
-      <Aux>
+      <div>
         <Modal
           show={this.state.purchasing}
           modalClose={this.purchaseCancelHandler}
@@ -168,7 +169,7 @@ class BurgerBuilder extends Component {
           {orderSummary}
         </Modal>
         {burger}
-      </Aux>
+      </div>
     );
   }
 }

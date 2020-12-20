@@ -1,0 +1,9 @@
+.BurgerBuilder {
+  display: block;
+}
+@media (min-width: 650px) {
+  .BurgerBuilder {
+    display: flex;
+    flex-flow: row;
+  }
+}

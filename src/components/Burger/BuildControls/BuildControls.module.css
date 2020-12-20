@@ -5,6 +5,7 @@
   display: flex;
   flex-flow: column;
   align-items: center;
+  border-radius: 10px;
   box-shadow: 0 2px 1px #ccc;
   margin: auto;
 }
@@ -16,7 +17,9 @@
   color: #966909;
   font-family: inherit;
   font-size: 1.2em;
+  margin: 15px 0;
   padding: 15px 30px;
+  border-radius: 10px;
   box-shadow: 2px 2px 2px #966909;
 }
 
@@ -47,5 +50,17 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@media (min-width: 650px) {
+  .BuildControls {
+    width: 45%;
+  }
+}
+
+@media (min-width: 850px) {
+  .BuildControls {
+    width: 40%;
   }
 }
