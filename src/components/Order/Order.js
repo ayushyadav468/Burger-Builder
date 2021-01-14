@@ -1,11 +1,11 @@
 import React from 'react';
-import styles from './Orders.module.css';
+import styles from './Order.module.css';
 
 const order = (props) => (
   <div className={styles.Order}>
     <p>Ingredients: Salad (1)</p>
     <p>
-      Price: <stron>Rs.250</stron>{' '}
+      Price: <strong>Rs.250</strong>
     </p>
   </div>
 );

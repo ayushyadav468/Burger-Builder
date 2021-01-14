@@ -5,7 +5,8 @@ class Orders extends Component {
   render() {
     return (
       <div>
-        <h1>Order</h1>
+        <Order />
+        <Order />
       </div>
     );
   }
