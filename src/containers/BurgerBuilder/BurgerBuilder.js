@@ -19,14 +19,13 @@ const INGREDIENTS_PRICE = {
 class BurgerBuilder extends Component {
   state = {
     ingredients: null,
-    totalPrice: 50,
+    totalPrice: 0,
     isPurchasable: false,
     purchasing: false,
     loading: false,
     error: false,
   };
   componentDidMount() {
-    console.log(this.props);
     axiosInstance
       .get(
         'https://burger-builder-61128-default-rtdb.firebaseio.com/ingredients.json'
@@ -82,33 +81,21 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    // alert('Continue Clicked');
-    // this.setState({ loading: true });
-    // const order = {
-    //   id: this.state.id,
-    //   ingredients: this.state.ingredients,
-    //   price: this.state.totalPrice,
-    //   user: {
-    //     name: 'Test Name',
-    //     email: 'testemail@gmail.com',
-    //     address: {
-    //       street: 'test street',
-    //       state: 'test state',
-    //       country: 'test country',
-    //     },
-    //     deliveryMode: 'fastest',
-    //   },
-    // };
-    // axiosInstance
-    //   .post('/orders.json', order)
-    //   .then((response) => {
-    //     // console.log(response);
-    //     this.setState({ loading: false, purchasing: false });
-    //   })
-    //   .catch((err) => {
-    //     this.setState({ loading: false, purchasing: false });
-    //     console.log(err);
-    //   });
+    const queryParam = [];
+    for (let i in this.state.ingredients) {
+      queryParam.push(
+        encodeURIComponent(i) +
+          '=' +
+          encodeURIComponent(this.state.ingredients[i])
+      );
+    }
+    queryParam.push('price=' + this.state.totalPrice);
+    const queryString = queryParam.join('&');
+    // eslint-disable-next-line react/prop-types
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString,
+    });
   };
 
   purchaseCancelHandler = () => {
