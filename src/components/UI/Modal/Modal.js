@@ -5,7 +5,7 @@ import Aux from '../../../hoc/Aux/Aux';
 import Backdrop from '../Backdrop/Backdrop';
 
 class Modal extends Component {
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.show !== this.props.show ||
       nextProps.children !== this.props.children
@@ -13,11 +13,16 @@ class Modal extends Component {
   }
 
   render() {
-    const stylesToBeApplied = this.props.show ? styles.Show : styles.Remove;
     return (
       <Aux>
-        <Backdrop show={this.props.show} clicked={this.props.modalClose} />
-        <div className={[styles.Modal, stylesToBeApplied].join(' ')}>
+        <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
+        <div
+          className={styles.Modal}
+          style={{
+            transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
+            opacity: this.props.show ? '1' : '0',
+          }}
+        >
           {this.props.children}
         </div>
       </Aux>
@@ -26,8 +31,8 @@ class Modal extends Component {
 }
 
 Modal.propTypes = {
-  show: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
-  modalClose: PropTypes.func,
+  show: PropTypes.any,
+  modalClosed: PropTypes.func,
   children: PropTypes.node,
 };
 
